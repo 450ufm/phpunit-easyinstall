@@ -10,6 +10,10 @@ Installation
     git clone git://github.com/knplabs/phpunit-easyinstall.git phpunit
     cd phpunit
     git submodule init
+    git submodule update
+
+Now you can enjoy phpunit 3.5!
+
     php phpunit.php
 
 Optionally you can add a symbolic link to your phpunit.php
