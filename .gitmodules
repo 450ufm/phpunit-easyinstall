@@ -1,0 +1,15 @@
+[submodule "Vendor/php-code-coverage"]
+	path = Vendor/php-code-coverage
+	url = http://github.com/sebastianbergmann/php-code-coverage.git
+[submodule "Vendor/php-file-iterator"]
+	path = Vendor/php-file-iterator
+	url = http://github.com/sebastianbergmann/php-file-iterator.git
+[submodule "Vendor/php-token-stream"]
+	path = Vendor/php-token-stream
+	url = http://github.com/sebastianbergmann/php-token-stream.git
+[submodule "Vendor/php-text-template"]
+	path = Vendor/php-text-template
+	url = http://github.com/sebastianbergmann/php-text-template.git
+[submodule "Vendor/php-timer"]
+	path = Vendor/php-timer
+	url = http://github.com/sebastianbergmann/php-timer.git
