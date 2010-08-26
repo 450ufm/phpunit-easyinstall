@@ -35,49 +35,88 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPUnit
+ * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 2.0.0
+ * @since      File available since Release 3.5.0
  */
 
-require_once 'PHPUnit/Framework/TestCase.php';
-require_once 'PHPUnit/Framework/TestResult.php';
-
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'DoubleTestCase.php';
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Success.php';
-
 /**
- *
+ * Creates a synthetic failed assertion.
  *
  * @package    PHPUnit
+ * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since Release 2.0.0
+ * @since      Class available since Release 3.5.0
  */
-class Framework_TestImplementorTest extends PHPUnit_Framework_TestCase
+class PHPUnit_Framework_SyntheticError extends PHPUnit_Framework_AssertionFailedError
 {
-    protected $test;
+    /**
+     * The synthetic file.
+     *
+     * @var string
+     */
+    protected $syntheticFile = '';
 
-    public function __construct()
+    /**
+     * The synthetic line number.
+     *
+     * @var integer
+     */
+    protected $syntheticLine = 0;
+
+    /**
+     * The synthetic trace.
+     *
+     * @var array
+     */
+    protected $syntheticTrace = array();
+
+    /**
+     * Constructor.
+     *
+     * @param string  $message
+     * @param integer $code
+     * @param string  $file
+     * @param integer $line
+     * @param array   $trace
+     */
+    public function __construct($message, $code, $file, $line, $trace)
     {
-        $this->test = new DoubleTestCase(
-          new Success
-        );
+        parent::__construct($message, $code);
+
+        $this->syntheticFile  = $file;
+        $this->syntheticLine  = $line;
+        $this->syntheticTrace = $trace;
     }
 
-    public function testSuccessfulRun()
+    /**
+     * @return string
+     */
+    public function getSyntheticFile()
     {
-        $result = new PHPUnit_Framework_TestResult;
+        return $this->syntheticFile;
+    }
 
-        $this->test->run($result);
+    /**
+     * @return integer
+     */
+    public function getSyntheticLine()
+    {
+        return $this->syntheticLine;
+    }
 
-        $this->assertEquals(count($this->test), count($result));
-        $this->assertEquals(0, $result->errorCount());
-        $this->assertEquals(0, $result->failureCount());
+    /**
+     * @return array
+     */
+    public function getSyntheticTrace()
+    {
+        return $this->syntheticTrace;
     }
 }
