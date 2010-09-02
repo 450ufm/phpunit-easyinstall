@@ -13,3 +13,6 @@
 [submodule "Vendor/php-timer"]
 	path = Vendor/php-timer
 	url = http://github.com/sebastianbergmann/php-timer.git
+[submodule "Vendor/phpunit-mock-objects"]
+	path = Vendor/phpunit-mock-objects
+	url = git://github.com/sebastianbergmann/phpunit-mock-objects.git

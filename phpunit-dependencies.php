@@ -6,6 +6,7 @@ $phpunitDependencies = array(
     'php-token-stream',
     'php-text-template',
     'php-timer',
+    'phpunit-mock-objects',
 );
 
 $dependencies = join(PATH_SEPARATOR, array_map(function($lib) { return __DIR__ . '/Vendor/' . $lib;}, $phpunitDependencies));
