@@ -10,5 +10,4 @@ $phpunitDependencies = array(
 );
 
 $dependencies = join(PATH_SEPARATOR, array_map(function($lib) { return __DIR__ . '/Vendor/' . $lib;}, $phpunitDependencies));
-set_include_path(get_include_path() . PATH_SEPARATOR . $dependencies);
-
+set_include_path($dependencies . PATH_SEPARATOR . get_include_path());
