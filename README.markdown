@@ -20,4 +20,3 @@ Now you can enjoy phpunit 3.5!
 Optionally you can add a symbolic link to your phpunit.php:
 
     sudo ln -s /home/me/.../phpunit/phpunit.php /usr/local/bin/phpunit
-
