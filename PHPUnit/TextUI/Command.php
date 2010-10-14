@@ -64,7 +64,6 @@ class PHPUnit_TextUI_Command
     protected $arguments = array(
       'listGroups'              => FALSE,
       'loader'                  => NULL,
-      'syntaxCheck'             => FALSE,
       'useDefaultConfiguration' => TRUE
     );
 
@@ -103,9 +102,6 @@ class PHPUnit_TextUI_Command
       'stop-on-failure' => NULL,
       'stop-on-incomplete' => NULL,
       'stop-on-skipped' => NULL,
-      'story' => NULL,
-      'story-html=' => NULL,
-      'story-text=' => NULL,
       'strict' => NULL,
       'syntax-check' => NULL,
       'tap' => NULL,
@@ -145,8 +141,7 @@ class PHPUnit_TextUI_Command
         } else {
             $suite = $runner->getTest(
               $this->arguments['test'],
-              $this->arguments['testFile'],
-              $this->arguments['syntaxCheck']
+              $this->arguments['testFile']
             );
         }
 
@@ -381,7 +376,6 @@ class PHPUnit_TextUI_Command
 
                 case '--process-isolation': {
                     $this->arguments['processIsolation'] = TRUE;
-                    $this->arguments['syntaxCheck']      = FALSE;
                 }
                 break;
 
@@ -432,44 +426,6 @@ class PHPUnit_TextUI_Command
 
                 case '--tap': {
                     $this->arguments['printer'] = new PHPUnit_Util_Log_TAP;
-                }
-                break;
-
-                case '--story': {
-                    $this->showMessage(
-                      'The --story functionality is deprecated and ' .
-                      'will be removed in the future.',
-                      FALSE
-                    );
-
-                    $this->arguments['printer'] = new PHPUnit_Extensions_Story_ResultPrinter_Text;
-                }
-                break;
-
-                case '--story-html': {
-                    $this->showMessage(
-                      'The --story-html functionality is deprecated and ' .
-                      'will be removed in the future.',
-                      FALSE
-                    );
-
-                    $this->arguments['storyHTMLFile'] = $option[1];
-                }
-                break;
-
-                case '--story-text': {
-                    $this->showMessage(
-                      'The --story-text functionality is deprecated and ' .
-                      'will be removed in the future.',
-                      FALSE
-                    );
-
-                    $this->arguments['storyTextFile'] = $option[1];
-                }
-                break;
-
-                case '--syntax-check': {
-                    $this->arguments['syntaxCheck'] = TRUE;
                 }
                 break;
 
@@ -542,15 +498,6 @@ class PHPUnit_TextUI_Command
             }
         }
 
-        if (isset($this->arguments['printer']) &&
-            $this->arguments['printer'] instanceof PHPUnit_Extensions_Story_ResultPrinter_Text &&
-            isset($this->arguments['processIsolation']) &&
-            $this->arguments['processIsolation']) {
-            $this->showMessage(
-              'The story result printer cannot be used in process isolation.'
-            );
-        }
-
         $this->handleCustomTestSuite();
 
         if (!isset($this->arguments['test'])) {
@@ -621,10 +568,6 @@ class PHPUnit_TextUI_Command
 
             $phpunit = $configuration->getPHPUnitConfiguration();
 
-            if (isset($phpunit['syntaxCheck'])) {
-                $this->arguments['syntaxCheck'] = $phpunit['syntaxCheck'];
-            }
-
             if (isset($phpunit['testSuiteLoaderClass'])) {
                 if (isset($phpunit['testSuiteLoaderFile'])) {
                     $file = $phpunit['testSuiteLoaderFile'];
@@ -654,9 +597,7 @@ class PHPUnit_TextUI_Command
             }
 
             if (!isset($this->arguments['test'])) {
-                $testSuite = $configuration->getTestSuiteConfiguration(
-                  $this->arguments['syntaxCheck']
-                );
+                $testSuite = $configuration->getTestSuiteConfiguration();
 
                 if ($testSuite !== NULL) {
                     $this->arguments['test'] = $testSuite;
@@ -675,10 +616,6 @@ class PHPUnit_TextUI_Command
             (isset($this->arguments['testDatabaseLogRevision']) && !isset($this->arguments['testDatabaseDSN']))) {
             $this->showHelp();
             exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
-        }
-
-        if (!isset($this->arguments['syntaxCheck'])) {
-            $this->arguments['syntaxCheck'] = FALSE;
         }
 
         if ($skeletonClass || $skeletonTest) {
