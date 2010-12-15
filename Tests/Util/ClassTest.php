@@ -36,73 +36,50 @@
  *
  * @package    PHPUnit
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @author     Ben Selby <benmatselby@gmail.com>
  * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 3.3.0
+ * @since      File available since Release 3.5.6
  */
 
-require_once 'BowlingGame.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 
-class BowlingGameTest extends PHPUnit_Framework_TestCase
+require_once 'PHPUnit/Util/Class.php';
+
+/**
+ *
+ *
+ * @package    PHPUnit
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @author     Ben Selby <benmatselby@gmail.com>
+ * @copyright  2002-2010 Sebastian Bergmann <sebastian@phpunit.de>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since Release 3.5.6
+ */
+class Util_ClassTest extends PHPUnit_Framework_TestCase
 {
-    protected $game;
-
-    protected function setUp()
+    /**
+     * Test that if a dynamic variable is defined on a class then
+     * the $attribute variable will be NULL, but the variable defined
+     * will be a public one so we are safe to return it
+     *
+     * Currently $attribute is NULL but we try and call isPublic() on it.
+     * This breaks for php 5.2.10
+     *
+     * @covers PHPUnit_Util_Class::getObjectAttribute
+     *
+     * @return void
+     */
+    public function testGetObjectAttributeCanHandleDynamicVariables()
     {
-        $this->game = new BowlingGame;
-    }
+        $attributeName = '_variable';
+        $object = new stdClass();
+        $object->$attributeName = 'Test';
 
-    public function testScoreForGutterGameIs0()
-    {
-        $this->rollMany(20, 0);
-        $this->assertEquals(0, $this->game->score());
-    }
-
-    public function testScoreForAllOnesIs20()
-    {
-        $this->rollMany(20, 1);
-        $this->assertEquals(20, $this->game->score());
-    }
-
-    public function testScoreForOneSpareAnd3Is16()
-    {
-        $this->rollSpare();
-        $this->game->roll(3);
-        $this->rollMany(17, 0);
-        $this->assertEquals(16, $this->game->score());
-    }
-
-    public function testScoreForOneStrikeAnd3And4Is24()
-    {
-        $this->rollStrike();
-        $this->game->roll(3);
-        $this->game->roll(4);
-        $this->rollMany(17, 0);
-        $this->assertEquals(24, $this->game->score());
-    }
-
-    public function testScoreForPerfectGameIs300()
-    {
-        $this->rollMany(12, 10);
-        $this->assertEquals(300, $this->game->score());
-    }
-
-    protected function rollMany($n, $pins)
-    {
-        for ($i = 0; $i < $n; $i++) {
-            $this->game->roll($pins);
-        }
-    }
-
-    protected function rollSpare()
-    {
-        $this->game->roll(5);
-        $this->game->roll(5);
-    }
-
-    protected function rollStrike()
-    {
-        $this->game->roll(10);
+        $actual = PHPUnit_Util_Class::getObjectAttribute($object, $attributeName);
+        $this->assertEquals('Test', $actual);
     }
 }
